@@ -1,10 +1,10 @@
 import { createApp } from 'vue'
 // @ts-ignore
 import App from './App.vue'
-import {store} from './store'
+import {form} from './store/form.ts'
 
 import './assets/styles/main.scss'
 
 const app = createApp(App)
-app.use(store)
+app.use(form)
 app.mount('#app')
