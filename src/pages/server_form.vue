@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "Tabs"
+  name: "serever_form"
 }
 </script>
 

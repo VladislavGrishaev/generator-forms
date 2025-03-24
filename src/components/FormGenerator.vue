@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import {defineProps, reactive, watch} from 'vue';
+import {defineProps, reactive, useSlots, watch} from 'vue';
 import '../assets/styles/form_generator.scss';
 
 /** -------------------------------------------------- **/
+
+const slots = useSlots();
 
 const props = defineProps<{
   title?: string;
@@ -18,30 +20,41 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue', 'submit', 'cancel']);
 
-const model = reactive({
+const modelObj = reactive({
   ...props.modelValue
 })
 
-watch(() => model, (newModel) =>
-    emit('update:modelValue', newModel),
-  {
-    deep: true
-  }
-)
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    Object.assign(modelObj, newVal);
+  },
+  { deep: true }
+);
+
+watch(
+  modelObj,
+  (newModel) => {
+    emit('update:modelValue', newModel);
+  },
+  { deep: true }
+);
 
 const onSubmit = () => {
-		emit('submit', model);
+  emit('submit', modelObj);
 }
 
 const onCancel = () => {
-		emit('cancel');
-}
+  for (const key in modelObj) {
+    modelObj[key] = typeof modelObj[key] === 'boolean' ? false : '';
+  }
+  emit('cancel');
+};
 
 </script>
 
 <template>
 		<form class="form-generator" @submit.prevent="onSubmit">
-
 				<h2 v-if="props.title">{{ props.title }}</h2>
 
 				<div
@@ -49,53 +62,90 @@ const onCancel = () => {
 								:key="index"
 								class="form-generator__field"
 				>
-						<label
-										v-if="field.type !== 'checkbox'"
-										:for="field.name"
-										class="form-generator__label">{{ field.label }}
-						</label>
-						<input
-										v-if="['text', 'email', 'password', 'number'].includes(field.type)"
-										v-model="model[field.name]"
-										type="text"
-										:id="field.name"
-										class="form-generator__input"/>
-
-						<select
-										v-else-if="field.type === 'select'"
-										v-model="model[field.name]"
-										:id="field.name"
-										class="form-generator__select">
-								<option
-												v-for="option in field.options"
-												:key="option"
-												:value="option">{{ option }}
-								</option>
-
-						</select>
-
-						<textarea
-										v-else-if="field.type === 'textarea'"
-										v-model="model[field.name]"
-										:id="field.name"
-										class="form-generator__textarea"
-						></textarea>
-
-
-						<div
-										v-else-if="field.type === 'checkbox'"
-										class="form-generator__field form-generator__field--checkbox"
-						>
-								<label class="form-generator__checkbox-label">
-										<input
-														v-model="model[field.name]"
-														:id="field.name"
-														type="checkbox"
-														class="form-generator__checkbox"/>
-										Согласен с условиями
+						<template v-if="field.type !== 'checkbox' && !slots[`field-${field.name}`]">
+								<label :for="field.name" class="form-generator__label">
+										{{ field.label }}
 								</label>
-						</div>
+						</template>
+
+
+
+						<!-- Текстовые поля -->
+						<template v-if="['text', 'email', 'password', 'number', 'radio'].includes(field.type)">
+								<slot
+												:name="`field-${field.name}`"
+												:fieldData="field"
+												:model="modelObj"
+								>
+										<input
+														v-model="modelObj[field.name]"
+														:type="field.type"
+														:id="field.name"
+														class="form-generator__input"
+										/>
+								</slot>
+						</template>
+
+						<!-- Select -->
+						<template v-else-if="field.type === 'select'">
+								<slot
+												:name="`field-${field.name}`"
+												:fieldData="field"
+												:model="modelObj"
+								>
+										<select
+														v-model="modelObj[field.name]"
+														:id="field.name"
+														class="form-generator__select"
+										>
+												<option
+																v-for="option in field.options"
+																:key="option"
+																:value="option"
+												>
+														{{ option }}
+												</option>
+										</select>
+								</slot>
+						</template>
+
+						<!-- Textarea -->
+						<template v-else-if="field.type === 'textarea'">
+								<slot
+												:name="`field-${field.name}`"
+												:fieldData="field"
+												:model="modelObj"
+								>
+          <textarea
+				          v-model="modelObj[field.name]"
+				          :id="field.name"
+				          class="form-generator__textarea"
+          ></textarea>
+								</slot>
+						</template>
+
+						<!-- Checkbox -->
+						<template v-else-if="field.type === 'checkbox'">
+								<slot
+												:name="`field-${field.name}`"
+												:fieldData="field"
+												:model="modelObj"
+								>
+										<div class="form-generator__field form-generator__field--checkbox">
+												<label class="form-generator__checkbox-label">
+														<input
+																		v-model="modelObj[field.name]"
+																		:id="field.name"
+																		type="checkbox"
+																		class="form-generator__checkbox"
+														/>
+														{{ field.label }}
+												</label>
+										</div>
+								</slot>
+						</template>
 				</div>
+
 				<div class="form-generator__actions">
 						<button
 										type="button"
