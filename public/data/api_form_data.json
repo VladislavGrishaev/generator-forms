@@ -1,0 +1,19 @@
+{
+ "fields": [
+  {
+   "name": "name",
+   "label": "Ваше имя",
+   "type": "text"
+  },
+  {
+   "name": "message",
+   "label": "Ваш комментарий",
+   "type": "textarea"
+  },
+  {
+   "name": "agree",
+   "label": "Согласен с условиями",
+   "type": "checkbox"
+  }
+ ]
+}

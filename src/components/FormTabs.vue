@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FormGenerator from "./FormGenerator.vue";
-import {reactive} from "vue";
+import {onMounted, reactive, ref} from "vue";
 
 const registerFields = [
   {
@@ -26,19 +26,6 @@ const registerFields = [
   }
 ]
 
-const complainFields = [
-  {
-				name: 'name',
-				label: 'Имя',
-				type: 'text'
-  },
-		{
-    'name': 'complain',
-				'label': 'Жалоба',
-				'type': 'select',
-				'options': ['Жалоба 1', 'Жалоба 2']
-		}
-]
 
 const subscribeFields = [
   {
@@ -53,12 +40,38 @@ const subscribeFields = [
   }
 ];
 
+const loginForm = [
+  {
+    name: 'email',
+    label: 'Почта',
+    type: 'email'
+  },
+  {
+    name: 'password',
+    label: 'Пароль',
+    type: 'password'
+  }
+];
+
 
 const formData = reactive({
 		name: '',
 		gender: '',
 		message: '',
 		agree: false
+})
+
+const dynamicFields = ref([])
+
+onMounted(async () => {
+  try {
+		  const response = await fetch('data/api_form_data.json')
+		  const data = await response.json()
+		  dynamicFields.value = data.fields
+  }
+  catch (error) {
+    console.error('Ошибка загрузки данных', error)
+  }
 })
 
 </script>
@@ -72,13 +85,7 @@ const formData = reactive({
 				@cancel="console.log('cancel')"
 		/>
 
-		<FormGenerator
-						:modelValue="formData"
-						:fields="complainFields"
-						title="Жалоба"
-						@submit="console.log('submit')"
-						@cancel="console.log('cancel')"
-		/>
+
 
 		<FormGenerator
 						:modelValue="formData"
@@ -87,4 +94,21 @@ const formData = reactive({
 						@submit="console.log('submit')"
 						@cancel="console.log('cancel')"
 		/>
+
+		<FormGenerator
+						:modelValue="formData"
+						:fields="loginForm"
+						title="Вход"
+						@submit="console.log('submit')"
+						@cancel="console.log('cancel')"
+		/>
+
+	<FormGenerator
+		v-if="dynamicFields.length > 0"
+			:modelValue="formData"
+			:fields="dynamicFields"
+			title="Форма с сервера"
+			@submit="console.log('submit')"
+			@cancel="console.log('cancel')"
+	/>
 </template>
