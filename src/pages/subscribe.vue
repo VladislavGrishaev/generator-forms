@@ -51,8 +51,6 @@ const cancelForm = () => {
 </script>
 
 <template>
-
-
 		<FormGenerator
 						:modelValue="subscribeFormData"
 						:fields="subscribeFields"

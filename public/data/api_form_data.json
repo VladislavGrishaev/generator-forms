@@ -2,18 +2,18 @@
  "fields": [
   {
    "name": "name",
-   "label": "Ваше имя",
+   "label": "Ваше имя +",
    "type": "text"
   },
   {
-   "name": "message",
-   "label": "Ваш комментарий",
-   "type": "textarea"
+   "name": "email",
+   "label": "Почта +",
+   "type": "email"
   },
   {
-   "name": "agree",
-   "label": "Согласен с условиями",
-   "type": "checkbox"
+   "name": "phone",
+   "label": "Телефон +",
+   "type": "tel"
   }
  ]
 }

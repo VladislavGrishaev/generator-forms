@@ -68,10 +68,7 @@ const onCancel = () => {
 								</label>
 						</template>
 
-
-
-						<!-- Текстовые поля -->
-						<template v-if="['text', 'email', 'password', 'number', 'radio'].includes(field.type)">
+						<template v-if="['text', 'email', 'password', 'number', 'radio', 'tel'].includes(field.type)">
 								<slot
 												:name="`field-${field.name}`"
 												:fieldData="field"
@@ -82,11 +79,12 @@ const onCancel = () => {
 														:type="field.type"
 														:id="field.name"
 														class="form-generator__input"
+														:autocomplete="field.type === 'password' ? 'password' : undefined"
+														:current-password="field.type === 'password' ? 'password' : undefined"
 										/>
 								</slot>
 						</template>
 
-						<!-- Select -->
 						<template v-else-if="field.type === 'select'">
 								<slot
 												:name="`field-${field.name}`"
@@ -109,7 +107,6 @@ const onCancel = () => {
 								</slot>
 						</template>
 
-						<!-- Textarea -->
 						<template v-else-if="field.type === 'textarea'">
 								<slot
 												:name="`field-${field.name}`"
@@ -124,7 +121,6 @@ const onCancel = () => {
 								</slot>
 						</template>
 
-						<!-- Checkbox -->
 						<template v-else-if="field.type === 'checkbox'">
 								<slot
 												:name="`field-${field.name}`"
@@ -155,7 +151,7 @@ const onCancel = () => {
 								Отмена
 						</button>
 						<button type="submit" class="form-generator__button form-generator__button--submit">
-								Сохранить
+								Отправить
 						</button>
 				</div>
 		</form>
