@@ -18,20 +18,25 @@ const feedbackFormData = reactive<FeedbackFormData>({
 
 const dynamicFields = ref([]);
 
+const loading = ref(true);
+
 onMounted(async () => {
   try {
-    const response = await fetch('data/api_form_data.json');
-    const data = await response.json();
-    dynamicFields.value = data.fields;
+    setTimeout(async () => {
+      const response = await fetch('data/api_form_data.json');
+      const data = await response.json();
+      dynamicFields.value = data.fields;
 
-    // Добавляем поле message, если его нет в данных
-    if (!dynamicFields.value.some(field => field.name === 'message')) {
-      dynamicFields.value.push({
-        name: 'message',
-        label: 'Сообщение',
-        type: 'textarea'
-      });
-    }
+      if (!dynamicFields.value.some(field => field.name === 'message')) {
+        dynamicFields.value.push({
+          name: 'message',
+          label: 'Сообщение',
+          type: 'textarea'
+        });
+      }
+
+      loading.value = false;
+    }, 1500);
   } catch (error) {
     console.error('Ошибка загрузки данных', error);
   }
@@ -39,6 +44,7 @@ onMounted(async () => {
 
 const submitForm = (data: typeof feedbackFormData) => {
   console.log('Форма отправлена с данными:', data);
+  alert('Форма отправлена с данными: ' + JSON.stringify(data, null, 2));
 };
 
 const cancelForm = () => {
@@ -54,11 +60,16 @@ const cancelForm = () => {
 </script>
 
 <template>
+		<div v-if="loading" class="preloader">
+				<div class="spinner"></div>
+				Загрузка...
+		</div>
+
 		<FormGenerator
 						v-if="dynamicFields.length > 0"
 						:modelValue="feedbackFormData"
 						:fields="dynamicFields"
-						title="Форма с сервера"
+						title="Написать нам"
 						@submit="submitForm"
 						@cancel="cancelForm"
 		>
@@ -74,3 +85,56 @@ const cancelForm = () => {
 				</template>
 		</FormGenerator>
 </template>
+
+<style scoped>
+
+.preloader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #2196f3;
+}
+
+.spinner {
+    border: 4px solid transparent;
+    border-top: 4px solid #2196f3;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 0 20px 0 0;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.custom-msg-field {
+    margin-top: 20px;
+}
+
+.form-generator__textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.form-generator__label {
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+</style>

@@ -34,6 +34,7 @@ const subscribeFields = [
 
 const submitForm = (data: typeof subscribeFormData) => {
   console.log('Форма отправлена с данными:', data)
+  alert('Форма отправлена с данными: ' + JSON.stringify(data, null, 2));
 }
 
 const cancelForm = () => {

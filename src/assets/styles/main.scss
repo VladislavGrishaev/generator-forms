@@ -66,13 +66,17 @@ button:focus-visible {
 }
 
 #app {
-  display: flex;
-  gap: 20px;
   max-width: 1280px;
   width: 100%;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
 }
 
 @media (prefers-color-scheme: light) {

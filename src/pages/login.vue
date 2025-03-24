@@ -29,6 +29,7 @@ const loginFields = [
 
 const submitForm = (data: typeof LoginFormData) => {
   console.log('Форма отправлена с данными:', data)
+  alert('Форма отправлена с данными: ' + JSON.stringify(data, null, 2));
 }
 
 const cancelForm = () => {

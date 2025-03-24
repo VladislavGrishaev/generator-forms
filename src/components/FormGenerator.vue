@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {defineProps, reactive, useSlots, watch} from 'vue';
-import '../assets/styles/form_generator.scss';
+import '../assets/styles/modules/_form_generator.scss';
 
 /** -------------------------------------------------- **/
 
