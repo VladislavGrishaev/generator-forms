@@ -77,7 +77,7 @@ const cancelForm = () => {
 		>
 				<template #field-gender="{ fieldData, model }">
 						<div class="custom-select-field">
-								<label for="gender" class="form-generator__label">Пол 0</label>
+								<label for="gender" class="form-generator__label">Пол</label>
 								<select
 												v-model="model[fieldData.name]"
 												:id="fieldData.name"

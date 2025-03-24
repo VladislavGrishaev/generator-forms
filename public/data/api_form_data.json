@@ -2,17 +2,17 @@
  "fields": [
   {
    "name": "name",
-   "label": "Ваше имя +",
+   "label": "Ваше имя",
    "type": "text"
   },
   {
    "name": "email",
-   "label": "Почта +",
+   "label": "Почта",
    "type": "email"
   },
   {
    "name": "phone",
-   "label": "Телефон +",
+   "label": "Телефон",
    "type": "tel"
   }
  ]
