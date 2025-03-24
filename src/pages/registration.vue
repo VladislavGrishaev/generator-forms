@@ -5,17 +5,17 @@ import {reactive} from "vue";
 type RegistrationFormData = {
   name: string;
   email: string;
-		gender: string;
-		password: string;
+  gender: string;
+  password: string;
   agree: boolean;
 };
 
 
 const registrationFormData = reactive<RegistrationFormData>({
-		name: '',
+  name: '',
   email: '',
-		gender: '',
-		password: '',
+  gender: '',
+  password: '',
   agree: false
 });
 
@@ -32,15 +32,15 @@ const registrationFields = [
     type: 'email'
   },
   {
-				name: 'gender',
-				label: 'Пол',
-				type: 'select',
-				options: ['Мужской', 'Женский']
+    name: 'gender',
+    label: 'Пол',
+    type: 'select',
+    options: ['Мужской', 'Женский']
   },
   {
-				name: 'password',
-				label: 'Пароль',
-				type: 'password'
+    name: 'password',
+    label: 'Пароль',
+    type: 'password'
   },
   {
     name: 'agree',
@@ -57,8 +57,7 @@ const cancelForm = () => {
   Object.keys(registrationFormData).forEach(key => {
     if (typeof registrationFormData[key] === 'boolean') {
       registrationFormData[key] = false
-    }
-    else {
+    } else {
       registrationFormData[key] = ''
     }
   })
@@ -75,13 +74,15 @@ const cancelForm = () => {
 						@submit="submitForm"
 						@cancel="cancelForm"
 		>
-				<template #field-select="{ fieldData, model }">
+				<template #field-gender="{ fieldData, model }">
 						<div class="custom-select-field">
 								<label for="gender" class="form-generator__label">Пол 0</label>
-							<select
-									v-model="model[fieldData.name]">
-								<option v-for="option in fieldData.options" :value="option" :key="option">{{ option }}</option>
-							</select>
+								<select
+												v-model="model[fieldData.name]"
+												:id="fieldData.name"
+												class="form-generator__select">
+										<option v-for="option in fieldData.options" :value="option" :key="option">{{ option }}</option>
+								</select>
 						</div>
 				</template>
 		</FormGenerator>
